@@ -18,15 +18,15 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
 
-from .OthelloNNet import OthelloNNet as onnet
+from .UnoNNet import UnoNNet as onnet
 
 args = dotdict({
     'lr': 0.001,
     'dropout': 0.3,
-    'epochs': 10,
-    'batch_size': 64,
+    'epochs': 6,
+    'batch_size': 32,
     'cuda': torch.cuda.is_available(),
-    'num_channels': 512,
+    'num_channels': 1,
 })
 
 class NNetWrapper(NeuralNet):
@@ -115,7 +115,7 @@ class NNetWrapper(NeuralNet):
         # preparing input
         board = torch.FloatTensor(board.astype(np.float64))
         if args.cuda: board = board.contiguous().cuda()
-        board = board.view(1, self.board_x, self.board_y)
+        #board = board.view(1, self.board_x, self.board_y)
         self.nnet.eval()
         with torch.no_grad():
             pi, v = self.nnet(board)
@@ -137,7 +137,7 @@ class NNetWrapper(NeuralNet):
         else:
             print("Checkpoint Directory exists! ")
         torch.save({
-            'state_dict' : self.nnet.state_dict(),
+            'state_dict': self.nnet.state_dict(),
         }, filepath)
 
     def load_checkpoint(self, folder='checkpoint', filename='checkpoint.pth.tar'):
