@@ -5,9 +5,14 @@ import numpy as np
 from pytorch_classification.utils import Bar, AverageMeter
 import time, os
 from pickle import Pickler, Unpickler
-import tensorflow as tf
-import multiprocessing
-from othello.tensorflow.NNet import NNetWrapper as nn
+
+from Uno.pytorch.NNet import NNetWrapper as nn
+
+import torch.multiprocessing as multiprocessing
+try:
+    multiprocessing.set_start_method('spawn')
+except RuntimeError:
+    pass
 
 def AsyncSelfPlay(game,args,iter_num,bar):
     #set gpu
@@ -20,9 +25,9 @@ def AsyncSelfPlay(game,args,iter_num,bar):
         os.environ["CUDA_VISIBLE_DEVICES"] = args.setGPU
 
     #set gpu memory grow
-    config = tf.ConfigProto()  
-    config.gpu_options.allow_growth=True  
-    sess = tf.Session(config=config)
+    #config = tf.ConfigProto()
+    #config.gpu_options.allow_growth=True
+    #sess = tf.Session(config=config)
 
     #create nn and load weight
     net = nn(game)
@@ -48,7 +53,7 @@ def AsyncSelfPlay(game,args,iter_num,bar):
         while True:
             templist = []
             episodeStep += 1
-            canonicalBoard = game.getCanonicalForm(board,curPlayer)
+            canonicalBoard = game.getCanonicalForm(board, curPlayer)
             temp = int(episodeStep < args.tempThreshold)
 
             pi = mcts.getActionProb(canonicalBoard, temp=temp)
@@ -124,9 +129,9 @@ def AsyncAgainst(game,args,iter_num,bar):
         os.environ["CUDA_VISIBLE_DEVICES"] = args.setGPU
 
     #set gpu memory grow
-    config = tf.ConfigProto()  
-    config.gpu_options.allow_growth=True  
-    sess = tf.Session(config=config)
+    #config = tf.ConfigProto()
+    #config.gpu_options.allow_growth=True
+    #sess = tf.Session(config=config)
 
     #create nn and load
     nnet = nn(game)
@@ -136,6 +141,7 @@ def AsyncAgainst(game,args,iter_num,bar):
     except:
         print("load train model fail")
         pass
+
     try:
         pnet.load_checkpoint(folder=args.checkpoint, filename='best.pth.tar')
     except:

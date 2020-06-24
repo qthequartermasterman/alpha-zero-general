@@ -32,7 +32,7 @@ class MCTS():
             self.search(canonicalBoard)
 
         s = self.game.stringRepresentation(canonicalBoard)
-        counts = [self.Nsa[(s,a)] if (s,a) in self.Nsa else 0 for a in range(self.game.getActionSize())]
+        counts = [self.Nsa[(s, a)] if (s, a) in self.Nsa else 0 for a in range(self.game.getActionSize())]
 
         if temp==0:
             bestA = np.argmax(counts)
@@ -81,7 +81,8 @@ class MCTS():
             sum_Ps_s = np.sum(self.Ps[s])
             if sum_Ps_s > 0:
                 self.Ps[s] /= sum_Ps_s    # renormalize
-            else:
+            elif np.sum(valids):
+
                 # if all valid moves were masked make all valid moves equally probable
                 
                 # NB! All valid moves may be masked if either your NNet architecture is insufficient or you've get overfitting or something else.

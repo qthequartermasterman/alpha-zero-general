@@ -1,11 +1,13 @@
 from Arena import Arena
 from MCTS import MCTS
-from othello.OthelloGame import OthelloGame, display
-from othello.OthelloPlayers import *
-from othello.tensorflow.NNet import NNetWrapper as NNet
+#from othello.OthelloGame import OthelloGame, display
+#from othello.OthelloPlayers import *
+#from othello.tensorflow.NNet import NNetWrapper as NNet
+from Uno.UnoGame import UnoGame, display
+from Uno.UnoPlayers import *
+from Uno.pytorch.NNet import NNetWrapper as NNet
 import os
 import numpy as np
-import tensorflow as tf
 import multiprocessing
 from utils import *
 from pytorch_classification.utils import Bar, AverageMeter
@@ -29,9 +31,9 @@ def Async_Play(game,args,iter_num,bar):
         os.environ["CUDA_VISIBLE_DEVICES"] = args.setGPU
 
     # set gpu growth
-    config = tf.ConfigProto()  
-    config.gpu_options.allow_growth=True  
-    sess = tf.Session(config=config)
+    #config = tf.ConfigProto()
+    #config.gpu_options.allow_growth=True
+    #sess = tf.Session(config=config)
 
     # create NN
     model1 = NNet(game)
@@ -103,7 +105,7 @@ if __name__=="__main__":
         print("Model 1 Win:",oneWon," Model 2 Win:",twoWon," Draw:",draws)
 
 
-    g = OthelloGame(6)
+    g = UnoGame()
 
     # parallel version
     #ParallelPlay(g)
@@ -111,13 +113,13 @@ if __name__=="__main__":
     # single process version
     # all players
     rp = RandomPlayer(g).play
-    gp = GreedyOthelloPlayer(g).play
-    hp = HumanOthelloPlayer(g).play
+    gp = GreedyUnoPlayer(g).play
+    hp = HumanUnoPlayer(g).play
 
     # nnet players
     n1 = NNet(g)
-    n1.load_checkpoint('./pretrained_models/othello/pytorch/','6x100x25_best.pth.tar')
-    args1 = dotdict({'numMCTSSims': 50, 'cpuct':1.0})
+    n1.load_checkpoint('./temp/Uno/', 'best.pth.tar')
+    args1 = dotdict({'numMCTSSims': 50, 'cpuct': 1.0})
     mcts1 = MCTS(g, n1, args1)
     n1p = lambda x: np.argmax(mcts1.getActionProb(x, temp=0))
 
@@ -127,5 +129,8 @@ if __name__=="__main__":
     #mcts2 = MCTS(g, n2, args2)
     #n2p = lambda x: np.argmax(mcts2.getActionProb(x, temp=0))
 
-    arena = Arena.Arena(n1p, hp, g, display=display)
-    print(arena.playGames(2, verbose=True))
+    #arena = Arena.Arena(n1p, hp, g, display=display)
+    #print(arena.playGames(2, verbose=True))
+
+    arena = Arena(n1p, rp, g, display=display)
+    print(arena.playGames(10, verbose=True))

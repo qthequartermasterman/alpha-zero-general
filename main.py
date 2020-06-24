@@ -1,6 +1,5 @@
 from Coach import Coach
-from othello.OthelloGame import OthelloGame as Game
-from othello.tensorflow.NNet import NNetWrapper as nn
+from Uno.UnoGame import UnoGame as Game
 from utils import *
 import os
 
@@ -13,27 +12,27 @@ args = dotdict({
     'numIters': 1000,
     'numEps': 100,
     'tempThreshold': 15,
-    'updateThreshold': 0.6,
+    'updateThreshold': 0.51,
     'maxlenOfQueue': 200000,
-    'numMCTSSims': 25,
+    'numMCTSSims':  20,
     'cpuct': 1,
     'multiGPU': False,
     'setGPU': '0',
     # The total number of games when self-playing is:
     # Total = numSelfPlayProcess * numPerProcessSelfPlay
-    'numSelfPlayProcess': 4,
-    'numPerProcessSelfPlay': 10,
+    'numSelfPlayProcess': 6,
+    'numPerProcessSelfPlay': 15,
     # The total number of games when against-playing is:
     # Total = numAgainstPlayProcess * numPerProcessAgainst
-    'numAgainstPlayProcess': 4,
-    'numPerProcessAgainst': 10,
-    'checkpoint': './temp/',
+    'numAgainstPlayProcess': 6,
+    'numPerProcessAgainst': 15,
+    'checkpoint': 'temp/Uno/',
     'numItersForTrainExamplesHistory': 20,
 })
 
 if __name__=="__main__":
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
-    g = Game(6)
+    g = Game(cards_dealt_per_player=2)
     c = Coach(g, args)
     c.learn()
