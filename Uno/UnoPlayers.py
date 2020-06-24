@@ -13,7 +13,7 @@ class RandomPlayer():
         return a
 
 
-class HumanGobangPlayer():
+class HumanUnoPlayer():
     def __init__(self, game):
         self.game = game
 
@@ -27,7 +27,7 @@ class HumanGobangPlayer():
             a = input()
 
             x,y = [int(x) for x in a.split(' ')]
-            a = self.game.n * x + y if x!= -1 else self.game.n ** 2
+            a = self.game.n * x + y if x != -1 else self.game.n ** 2
             if valid[a]:
                 break
             else:
@@ -36,7 +36,7 @@ class HumanGobangPlayer():
         return a
 
 
-class GreedyGobangPlayer():
+class GreedyUnoPlayer():
     def __init__(self, game):
         self.game = game
 
