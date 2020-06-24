@@ -35,7 +35,7 @@ def AsyncSelfPlay(game,args,iter_num,bar):
         net.load_checkpoint(folder=args.checkpoint, filename='best.pth.tar')
     except:
         pass
-    mcts = MCTS(game, net,args)
+    mcts = MCTS(game, net, args, dirichlet_noise=True)
 
     # create a list for store game state
     returnlist = []

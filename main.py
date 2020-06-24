@@ -28,6 +28,8 @@ args = dotdict({
     'numPerProcessAgainst': 15,
     'checkpoint': 'temp/Uno/',
     'numItersForTrainExamplesHistory': 20,
+
+    'dirichletAlpha': 0.6     # α = {0.3, 0.15, 0.03} for chess, shogi and Go respectively, scaled in inverse proportion to the approximate number of legal moves in a typical position
 })
 
 if __name__=="__main__":
