@@ -1,5 +1,7 @@
 import math
 import numpy as np
+import sys
+sys.setrecursionlimit(int(3e5))
 EPS = 1e-8
 
 class MCTS():
