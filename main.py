@@ -21,7 +21,7 @@ args = dotdict({
     # The total number of games when self-playing is:
     # Total = numSelfPlayProcess * numPerProcessSelfPlay
     'numSelfPlayProcess': 6,
-    'numPerProcessSelfPlay': 15,
+    'numPerProcessSelfPlay': 25,
     # The total number of games when against-playing is:
     # Total = numAgainstPlayProcess * numPerProcessAgainst
     'numAgainstPlayProcess': 6,
