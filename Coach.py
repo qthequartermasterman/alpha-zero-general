@@ -201,7 +201,8 @@ class Coach():
     def parallel_train_network(self,iter_num):
         print("Start train network")
         pool = multiprocessing.Pool(processes=1)
-        pool.apply_async(AsyncTrainNetwork,args=(self.game,self.args,self.trainExamplesHistory,))
+        res = pool.apply_async(AsyncTrainNetwork,args=(self.game,self.args,self.trainExamplesHistory,))
+        res.get()
         pool.close()
         pool.join()
 
@@ -230,7 +231,8 @@ class Coach():
         print("nwin: "+str(nwins))
         print("draw: "+str(draws))
         pool = multiprocessing.Pool(processes=1)
-        pool.apply_async(CheckResultAndSaveNetwork,args=(pwins,nwins,draws,self.game,self.args,iter_num,))
+        res = pool.apply_async(CheckResultAndSaveNetwork,args=(pwins,nwins,draws,self.game,self.args,iter_num,))
+        res.get()
         pool.close()
         pool.join()
 
