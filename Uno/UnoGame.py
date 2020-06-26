@@ -59,7 +59,7 @@ class UnoGame(Game):
         else:
             temp = np.copy(board)
             temp[[3, 4]] = temp[[4, 3]]
-            diff = temp-board
+            # diff = temp-board
             return temp
 
     def getSymmetries(self, board, pi):
@@ -114,7 +114,26 @@ class UnoGame(Game):
         sym.append((new_board, pi))
 
         # Color interchangeability
-        # Not yet implemented
+        # For example, exchange all red cards with corresponding green cards
+        first_blue = 0
+        first_green = 25
+        first_red = 50
+        first_yellow = 75
+        combinations = [(first_blue,    first_green),
+                        (first_blue,    first_red),
+                        (first_blue,    first_yellow),
+                        (first_green,   first_red),
+                        (first_green,   first_yellow),
+                        (first_red,     first_yellow)]
+        for combo in combinations:
+            # Swap all cards with corresponding card of different color
+            duplicate_pairs = [(combo[0]+i, combo[1]+i) for i in range(25)]
+            # Make a new board with all duplicate card swapped. This is faster than a new board for each pair-wise swap
+            new_board = np.copy(board)
+            for pair in duplicate_pairs:
+                new_board.T[[pair[0], pair[1]]] = new_board.T[[pair[1], pair[0]]]
+            sym.append((new_board, pi))
+
         return sym
 
     def stringRepresentation(self, board):

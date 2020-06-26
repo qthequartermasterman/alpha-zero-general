@@ -90,20 +90,26 @@ def AsyncTrainNetwork(game,args,trainhistory):
     else:
         print("File with trainExamples found. Read it.")
         with open(examplesFile, "rb") as f:
-            for i in Unpickler(f).load():
-                trainhistory.append(i)
+            try:
+                for i in Unpickler(f).load():
+                    trainhistory.append(i)
+            except EOFError:
+                print('Hit an End of File Error while reading train history from disc.')
         f.closed
     #----------------------
     #---delete if over limit---
+    print(f'Checking length of trainhistory: {len(trainhistory)}, with the max number of iterations in args: {args.numItersForTrainExamplesHistory}')
     if len(trainhistory) > args.numItersForTrainExamplesHistory:
         print("len(trainExamplesHistory) =", len(trainhistory), " => remove the oldest trainExamples")
         del trainhistory[len(trainhistory)-1]
     #-------------------
     #---extend history---
+    print('Extending train examples')
     trainExamples = []
     for e in trainhistory:
         trainExamples.extend(e)
     #---save history---
+    print('saving history')
     folder = args.checkpoint
     if not os.path.exists(folder):
         os.makedirs(folder)

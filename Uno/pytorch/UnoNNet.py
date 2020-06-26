@@ -15,15 +15,17 @@ class UnoNNet(nn.Module):
         self.args = args
 
         super(UnoNNet, self).__init__()
-        self.fc1 = nn.Linear(self.board_x * self.board_y, 512)
+        self.fc1 = nn.Linear(self.board_x * self.board_y, 128)
         list_of_modules = []
         for _ in range(args.num_channels):
-            list_of_modules += [nn.Linear(512, 512), nn.ReLU()]
+            list_of_modules += [nn.Linear(128, 128), nn.ReLU()]
         self.sequence = nn.Sequential(*list_of_modules)
 
-        self.fc3 = nn.Linear(512, self.action_size)
+        self.fc3 = nn.Linear(128, self.action_size)
 
-        self.fc4 = nn.Linear(512, 1)
+        self.fc4 = nn.Linear(128, 1)
+
+        #self.b_fc1 = nn.Linear(self.board_x*self.board_y)
 
     def forward(self, s):
         #                                                           s: batch_size x board_x x board_y

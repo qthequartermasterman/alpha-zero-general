@@ -8,9 +8,13 @@ from Uno.UnoPlayers import *
 from Uno.pytorch.NNet import NNetWrapper as NNet
 import os
 import numpy as np
-import multiprocessing
 from utils import *
 from pytorch_classification.utils import Bar, AverageMeter
+import torch.multiprocessing as multiprocessing
+try:
+    multiprocessing.set_start_method('spawn')
+except RuntimeError:
+    pass
 
 """
 use this script to play any two agents against each other, or play manually with
@@ -54,9 +58,12 @@ def Async_Play(game,args,iter_num,bar):
     # create MCTS
     mcts1 = MCTS(game, model1, args)
     mcts2 = MCTS(game, model2, args)
+    rp = RandomPlayer(game).play
 
     # each process play 2 games
-    arena = Arena(lambda x: np.argmax(mcts1.getActionProb(x, temp=0)),lambda x: np.argmax(mcts2.getActionProb(x, temp=0)), game)
+    #arena = Arena(lambda x: np.argmax(mcts1.getActionProb(x, temp=0)),lambda x: np.argmax(mcts2.getActionProb(x, temp=0)), game)
+    arena = Arena(lambda x: np.argmax(mcts1.getActionProb(x, temp=0)),
+                  rp, game)
     arena.displayBar = False
     oneWon,twoWon, draws = arena.playGames(2)
     return oneWon,twoWon, draws
@@ -73,7 +80,7 @@ if __name__=="__main__":
 
     'multiGPU': False,  # multiGPU only support 2 GPUs.
     'setGPU': '0',
-    'numPlayGames': 4,  # total num should x2, because each process play 2 games.
+    'numPlayGames': 10,  # total num should x2, because each process play 2 games.
     'numPlayPool': 4,   # num of processes pool.
 
     'model1Folder': './temp/',
@@ -102,7 +109,7 @@ if __name__=="__main__":
             oneWon += i[0]
             twoWon += i[1]
             draws += i[2]
-        print("Model 1 Win:",oneWon," Model 2 Win:",twoWon," Draw:",draws)
+        print("Model 1 Win:",oneWon,"\n Model 2 Win:",twoWon,"\n Draw:",draws)
 
 
     g = UnoGame()
@@ -129,8 +136,8 @@ if __name__=="__main__":
     #mcts2 = MCTS(g, n2, args2)
     #n2p = lambda x: np.argmax(mcts2.getActionProb(x, temp=0))
 
-    #arena = Arena.Arena(n1p, hp, g, display=display)
-    #print(arena.playGames(2, verbose=True))
+    arena = Arena(n1p, hp, g, display=display)
+    print(arena.playGames(2, verbose=True))
 
-    arena = Arena(n1p, rp, g, display=display)
-    print(arena.playGames(10, verbose=True))
+    #arena = Arena(n1p, rp, g, display=display)
+    #print(arena.playGames(5, verbose=True))

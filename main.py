@@ -14,22 +14,22 @@ args = dotdict({
     'tempThreshold': 15,
     'updateThreshold': 0.51,
     'maxlenOfQueue': 200000,
-    'numMCTSSims':  20,
+    'numMCTSSims':  10,
     'cpuct': 1,
     'multiGPU': False,
     'setGPU': '0',
     # The total number of games when self-playing is:
     # Total = numSelfPlayProcess * numPerProcessSelfPlay
-    'numSelfPlayProcess': 6,
-    'numPerProcessSelfPlay': 25,
+    'numSelfPlayProcess': 4,
+    'numPerProcessSelfPlay': 15,
     # The total number of games when against-playing is:
     # Total = numAgainstPlayProcess * numPerProcessAgainst
     'numAgainstPlayProcess': 6,
-    'numPerProcessAgainst': 15,
+    'numPerProcessAgainst': 10,
     'checkpoint': 'temp/Uno/',
-    'numItersForTrainExamplesHistory': 20,
+    'numItersForTrainExamplesHistory': 9,
 
-    'dirichletAlpha': 0.6     # α = {0.3, 0.15, 0.03} for chess, shogi and Go respectively, scaled in inverse proportion to the approximate number of legal moves in a typical position
+    'dirichletAlpha': 1.75     # α = {0.3, 0.15, 0.03} for chess, shogi and Go respectively, scaled in inverse proportion to the approximate number of legal moves in a typical position
 })
 
 if __name__=="__main__":

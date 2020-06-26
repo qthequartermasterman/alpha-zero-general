@@ -224,7 +224,8 @@ class Hand:
                 # The conditions were placed in this order to take advantage of evaluation short-circuiting.
                 # It's more likely that two cards have the same color than symbol than wild
                 valid_moves.append(card)
-
+        with open(f'UnoNumberOfValidMoves.csv', 'a+') as f:
+            f.write(f'{len(valid_moves)}\n')
         return valid_moves
 
     def get_valid_moves_numpy(self):
