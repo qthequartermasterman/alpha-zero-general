@@ -58,19 +58,24 @@ class UnoBoard:
             else:
                 game_started = True
 
-    def get_next_player(self, current_player):
-        number_of_players_to_move = 2 if self.discard.top_card().skip else 1
+    def get_next_player(self, current_player, skip=False, reverse=False):
+        number_of_players_to_move = 2 if skip else 1
         # Move in the direction the number of players to move, cycling over if needed.
-        return (current_player + self.direction_of_play * number_of_players_to_move) % len(self.players)
+        # return (current_player + self.direction_of_play * number_of_players_to_move) % len(self.players)
+        direction = 1 if not reverse else -1
+        return (current_player + direction * number_of_players_to_move) % len(self.players)
 
-    def play_card(self, player: int, card):
+    def play_card(self, player: int, card: UnoCard):
         """"""
+        draw_number = card.draw_number
+        skip = card.skip
+        reverse = card.reverse
         self.players[player].play_card(card)
-        if self.discard.top_card().reverse:
+        if reverse:
             # Reverse card was played
             self.direction_of_play *= -1
-        next_player = self.get_next_player(player)
-        for _ in range(self.discard.top_card().draw_number):
+        next_player = self.get_next_player(player, skip, reverse)
+        for _ in range(draw_number):
             self.reload_deck_if_needed()
             self.players[next_player].draw_card_from_deck()
         # if self.discard.top_card().wild:

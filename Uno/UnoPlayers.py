@@ -1,4 +1,5 @@
 import numpy as np
+from .DeckOfCards import master_list_of_cards
 
 
 class RandomPlayer():
@@ -22,12 +23,19 @@ class HumanUnoPlayer():
         valid = self.game.getValidMoves(board, 1)
         for i in range(len(valid)):
             if valid[i]:
-                print(int(i/self.game.n), int(i%self.game.n))
+                # print(int(i/self.game.n), int(i%self.game.n))
+                try:
+                    print('Card ID:', i, 'Card:', master_list_of_cards[i])
+                except:
+                    print('Card ID:', i, 'Draw a new card')
+                    pass
+        print('Choose card ID: ')
         while True:
             a = input()
 
-            x,y = [int(x) for x in a.split(' ')]
-            a = self.game.n * x + y if x != -1 else self.game.n ** 2
+            #x,y = [int(x) for x in a.split(' ')]
+            #a = self.game.n * x + y if x != -1 else self.game.n ** 2
+            a = int(a)
             if valid[a]:
                 break
             else:
