@@ -21,13 +21,13 @@ args = dotdict({
     # The total number of games when self-playing is:
     # Total = numSelfPlayProcess * numPerProcessSelfPlay
     'numSelfPlayProcess': 4,
-    'numPerProcessSelfPlay': 15,
+    'numPerProcessSelfPlay': 10,
     # The total number of games when against-playing is:
     # Total = numAgainstPlayProcess * numPerProcessAgainst
     'numAgainstPlayProcess': 6,
     'numPerProcessAgainst': 10,
     'checkpoint': 'temp/Uno/',
-    'numItersForTrainExamplesHistory': 9,
+    'numItersForTrainExamplesHistory': 5,
 
     'dirichletAlpha': 1.75     # α = {0.3, 0.15, 0.03} for chess, shogi and Go respectively, scaled in inverse proportion to the approximate number of legal moves in a typical position
 })
@@ -35,6 +35,6 @@ args = dotdict({
 if __name__=="__main__":
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
-    g = Game(cards_dealt_per_player=2)
+    g = Game(cards_dealt_per_player=5)
     c = Coach(g, args)
     c.learn()

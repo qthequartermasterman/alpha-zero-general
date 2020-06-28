@@ -114,9 +114,13 @@ def AsyncTrainNetwork(game,args,trainhistory):
     if not os.path.exists(folder):
         os.makedirs(folder)
     filename = os.path.join(folder, 'trainhistory.pth.tar'+".examples")
-    with open(filename, "wb+") as f:
-        Pickler(f).dump(trainhistory)
-        f.closed
+    try:
+        with open(filename, "wb+") as f:
+            Pickler(f).dump(trainhistory)
+            f.closed
+    except:
+        print('Issue while pickling the trainExamples')
+        pass
     #------------------
     nnet.train(trainExamples)
     nnet.save_checkpoint(folder=args.checkpoint, filename='train.pth.tar')
@@ -253,6 +257,7 @@ class Coach():
 
         for i in range(1, self.args.numIters+1):
             print('------ITER ' + str(i) + '------')
+            print(f'Start time:', time.ctime())
             iterationTrainExamples = deque([], maxlen=self.args.maxlenOfQueue)
             temp = self.parallel_self_play()
             iterationTrainExamples += temp

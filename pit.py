@@ -136,8 +136,8 @@ if __name__=="__main__":
     #mcts2 = MCTS(g, n2, args2)
     #n2p = lambda x: np.argmax(mcts2.getActionProb(x, temp=0))
 
-    arena = Arena(n1p, hp, g, display=display)
-    print(arena.playGames(2, verbose=True))
+    arena = Arena(n1p, rp, g, display=display)
+    print(arena.playGames(20, verbose=False))
 
     #arena = Arena(n1p, rp, g, display=display)
     #print(arena.playGames(5, verbose=True))

@@ -12,7 +12,7 @@ class UnoGame(Game):
         self.board = Board(self.n, cards_dealt_per_player)
         # The MCTS crashes for some reason when we have random initial points,
         # so instead, we'll just feed it the same initial position each time
-        self.constant_uno_board = Board(2, cards_dealt_per_player)
+        self.constant_uno_board = Board(num_players, cards_dealt_per_player)
 
     def getInitBoard(self):
         # return initial board (numpy board)
@@ -153,6 +153,22 @@ class UnoGame(Game):
     def print_board_human_friendly(self, board):
         self.board.from_numpy(board)
         return str(self.board)
+
+    def get_imperfect_knowledge_board(self, board, player_id):
+        self.board.from_numpy(board)
+        known_cards = np.stack([board[1], board[2], board[3+player_id]])
+        player_ids = [self.board.get_next_player(player_id,skip=True, reverse=True),    # 2 players back
+                      self.board.get_next_player(player_id,skip=False, reverse=True),   # 1 player forward
+                      player_id,                                                        # Current Player
+                      self.board.get_next_player(player_id,skip=False, reverse=False),  # 1 player forward
+                      self.board.get_next_player(player_id,skip=True, reverse=False)]   # 2 players forward
+
+        card_counts_every_container = np.sum(board, axis=1)
+        card_counts_list = [card_counts_every_container[3+id] for id in player_ids]
+        card_counts = np.array(card_counts_list)
+        card_counts = 1/self.getActionSize() * card_counts
+
+        return known_cards, card_counts
 
 def display(board):
     b = Board()

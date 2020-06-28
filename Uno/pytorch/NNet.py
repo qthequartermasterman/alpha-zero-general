@@ -23,8 +23,8 @@ from .UnoNNet import UnoNNet as onnet
 args = dotdict({
     'lr': 0.001,
     'dropout': 0.3,
-    'epochs': 4,
-    'batch_size': 32,
+    'epochs': 6,
+    'batch_size': 64,
     'cuda': torch.cuda.is_available(),
     'num_channels': 1,
 })
@@ -34,6 +34,7 @@ class NNetWrapper(NeuralNet):
         self.nnet = onnet(game, args)
         self.board_x, self.board_y = game.getBoardSize()
         self.action_size = game.getActionSize()
+        self.game = game
 
         if args.cuda:
             self.nnet.cuda()
@@ -114,8 +115,9 @@ class NNetWrapper(NeuralNet):
 
         # preparing input
         board = torch.FloatTensor(board.astype(np.float64))
-        if args.cuda: board = board.contiguous().cuda()
-        #board = board.view(1, self.board_x, self.board_y)
+        if args.cuda:
+            board = board.contiguous().cuda()
+        #known_cards, card_counts = self.game.get_imperfect_knowledge_board(board, )
         self.nnet.eval()
         with torch.no_grad():
             pi, v = self.nnet(board)
