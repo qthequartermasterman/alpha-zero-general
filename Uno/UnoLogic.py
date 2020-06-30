@@ -97,7 +97,12 @@ class UnoBoard:
 
     def get_board_numpy(self):
         list_of_np_arrays = [self.deck.numpy(), self.discard.numpy(), self.discard.top_numpy()]
-        list_of_np_arrays += [player.numpy() for player in self.players]
+        player = self.curPlayer
+        for _ in range(len(self.players)):
+            list_of_np_arrays.append(self.players[player].numpy())
+            reverse = True if self.direction_of_play == -1 else False
+            player = self.get_next_player(player, skip=False, reverse=reverse)
+        #list_of_np_arrays += [player.numpy() for player in self.players]
         return np.stack(list_of_np_arrays)
 
     def from_numpy(self, x):
